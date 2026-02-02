@@ -2,8 +2,8 @@ name: golangci-lint
 on:
   push:
     branches:
-      - main
-      - master
+      - 'feature/*'
+      - 'fix/*'
   pull_request:
 
 permissions:
