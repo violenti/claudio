@@ -1,7 +1,7 @@
 package ai
 
 type OpenAI struct {
-	APIKey string
+	Token string
 }
 
 func (o OpenAI) Name() string {
