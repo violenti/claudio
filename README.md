@@ -1,25 +1,36 @@
 # Claudio
 
-Claudio is a assitance of AI that used Anthropic with the apikey. 
-
-In the near future as well support OpenAI and other LLM.
+Claudio is an AI assistant powered by Anthropic via your own API key. Support for OpenAI and other LLMs is coming down the pipe soon.
 
 
 ## Installation
 
-```bash
-
 Install golang >= 1.25
+
+In MacOs:
+
+```
+ brew install golang 
+ 
+```
+
+```bash
 
 git clone https://github.com/violenti/claudio.git
 
 cd claudio/
 
+
+```
 execute the commmand:
+
+```bash
 
 make 
 
 ```
+The output is a binary called claudio
+
 
 ## Usage
 
