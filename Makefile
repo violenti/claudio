@@ -1,6 +1,8 @@
 # Define the Go command and output binary name
-GO = go
-TARGET = my_app
+GO=go
+GOFMT=gofmt
+BIN_NAME := claudio
+TARGET := $(BIN_NAME)
 
 .PHONY: all build run clean test help
 
@@ -10,8 +12,8 @@ all: build
 ## build: build the Go application
 build: $(TARGET)
 
-$(TARGET): main.go
-	$(GO) build -o $(TARGET) main.go
+$(TARGET): cmd/aicli/main.go
+	$(GO) build -o $(TARGET) ./cmd/aicli/main.go
 
 ## run: build and run the application
 run: build

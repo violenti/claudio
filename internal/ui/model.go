@@ -19,7 +19,16 @@ func InitialModel(p []ai.Provider) Model {
 }
 
 var (
-	titleStyle = lipgloss.NewStyle().MarginLeft(2).Foreground(lipgloss.Color("205")).Bold(true)
-	itemStyle  = lipgloss.NewStyle().PaddingLeft(4)
-	selStyle   = lipgloss.NewStyle().PaddingLeft(2).Foreground(lipgloss.Color("86")).Bold(true)
+	titleStyle = lipgloss.NewStyle().
+			MarginLeft(2).
+			Foreground(lipgloss.Color("205")).
+			Bold(true)
+
+	itemStyle = lipgloss.NewStyle().
+			PaddingLeft(4)
+
+	selStyle = lipgloss.NewStyle().
+			PaddingLeft(2).
+			Foreground(lipgloss.Color("86")).
+			Bold(true)
 )
