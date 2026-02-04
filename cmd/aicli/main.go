@@ -147,7 +147,7 @@ func chatMode() {
 	for {
 		fmt.Print("\r")
 		fmt.Print(color.GreenString("You: "))
-		os.Stdout.Sync()
+		_ = os.Stdout.Sync()
 
 		fmt.Printf("")
 
