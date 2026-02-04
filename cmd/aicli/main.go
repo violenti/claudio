@@ -59,8 +59,8 @@ func main() {
 	fmt.Print("\033[0m")
 	fmt.Print("\033[?25h")
 
-	os.Stdout.Sync()
-	os.Stderr.Sync()
+  	_ = os.Stdout.Sync()
+ 63 _ = os.Stderr.Sync()  
 
 	_ = term.Restore(int(os.Stdin.Fd()), oldState)
 
