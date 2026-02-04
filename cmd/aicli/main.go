@@ -15,6 +15,17 @@ import (
 	"golang.org/x/term"
 )
 
+func getAPIKey(envVar string, providerNmae string) string {
+	key := os.Getenv(envVar)
+	if key == "" {
+		color.Red("%s not set. Enter API Key:", envVar)
+		bytesKey, _ := term.ReadPassword(int(os.Stdin.Fd()))
+		fmt.Println()
+		key = string(bytesKey)
+	}
+	return key
+}
+
 func main() {
 	if len(os.Args) > 1 && os.Args[1] == "chat" {
 		chatMode()
@@ -104,6 +115,15 @@ func chatMode() {
 	if selectedIndex < 0 || selectedIndex >= len(motors) {
 		fmt.Println("Error: invalid provider index")
 		return
+	}
+	switch selectedIndex {
+	case 0: // OpenAI
+		key := getAPIKey("OPENAI_API_KEY", "OpenAI")
+		motors[0] = ai.OpenAI{Token: key}
+	case 1: // Claude
+		key := getAPIKey("ANTHROPIC_API_KEY", "Claude")
+		motors[1] = ai.Claude{ApiKey: key}
+
 	}
 
 	selectedProvider := motors[selectedIndex]

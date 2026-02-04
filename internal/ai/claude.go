@@ -10,7 +10,7 @@ import (
 )
 
 type Claude struct {
-	Token string
+	ApiKey string
 }
 
 func (c Claude) Name() string {
@@ -18,10 +18,14 @@ func (c Claude) Name() string {
 }
 
 func (c Claude) Question(prompt string) (string, error) {
-
-	var AnthropicKey = os.Getenv("ANTHROPIC_API_KEY")
-
-	client := anthropic.NewClient(option.WithAPIKey(AnthropicKey))
+	ApiKey := c.ApiKey
+	if ApiKey == "" {
+		ApiKey = os.Getenv("ANTHROPIC_API_KEY")
+	}
+	if ApiKey == "" {
+		return "", fmt.Errorf("ANTHROPIC_API_KEY not configured")
+	}
+	client := anthropic.NewClient(option.WithAPIKey(ApiKey))
 
 	message, err := client.Messages.New(context.TODO(), anthropic.MessageNewParams{
 		MaxTokens: 1024,
