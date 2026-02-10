@@ -1,7 +1,6 @@
 package ai
 
 import (
-	"os"
 	"testing"
 )
 
@@ -18,9 +17,7 @@ func TestOpenAI_ImplementsProviders(t *testing.T) {
 }
 
 func TestOpenAI_Question_NoApiKey(t *testing.T) {
-	original := os.Getenv("OPENAI_API_KEY")
-	os.Unsetenv("OPENAI_API_KEY")
-	defer os.Setenv("OPENAI_API_KEY", original)
+	t.Setenv("OPENAI_API_KEY", "")
 
 	c := OpenAI{Token: ""}
 	_, err := c.Question("hello")

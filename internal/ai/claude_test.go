@@ -1,7 +1,6 @@
 package ai
 
 import (
-	"os"
 	"testing"
 )
 
@@ -18,9 +17,7 @@ func TestClaude_ImplementsProvider(t *testing.T) {
 }
 
 func TestClaude_Question_NoApiKey(t *testing.T) {
-	original := os.Getenv("ANTHROPIC_API_KEY")
-	os.Unsetenv("ANTHROPIC_API_KEY")
-	defer os.Setenv("ANTHROPIC_API_KEY", original)
+	t.Setenv("ANTHROPIC_API_KEY", "")
 
 	c := Claude{ApiKey: ""}
 	_, err := c.Question("hello")
@@ -34,9 +31,7 @@ func TestClaude_Question_NoApiKey(t *testing.T) {
 }
 
 func TestClaude_Question_UsesEnvKey(t *testing.T) {
-	original := os.Getenv("ANTHROPIC_API_KEY")
-	os.Setenv("ANTHROPIC_API_KEY", "fake-env-key")
-	defer os.Setenv("ANTHROPIC_API_KEY", original)
+	t.Setenv("ANTHROPIC_API_KEY", "fake-env-key")
 
 	c := Claude{ApiKey: ""}
 	_, err := c.Question("hello")
