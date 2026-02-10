@@ -11,7 +11,7 @@
 ## :rocket: Features
 
 - [x] Anthropic (Claude) integration.
-- [ ] OpenAI support (Coming soon).
+- [x] OpenAI support (Coming soon).
 - [ ] Local LLM support via Ollama (Planned).
 
 

@@ -1,0 +1,42 @@
+name: golangci-test
+on:
+  push:
+    branches:
+      - 'feature/*'
+      - 'fix/*'
+  pull_request:
+
+permissions:
+  contents: read
+  # Optional: allow read access to pull requests. Use with `only-new-issues` option.
+  # pull-requests: read
+
+jobs:
+  golang_test:
+    name: test
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+      - name: Install dependencies
+        run: go mod download
+      - name: Build
+        run: go build -v ./... 
+      - name: Set short SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+      - name: Test with the Go CLI
+        run: go test ./... -json -coverprofile=coverage.out > TestResults-${{ env.SHORT_SHA }}.json
+      - name: Generate coverage report
+        run: go tool cover -html=coverage.out -o coverage-${{ env.SHORT_SHA }}.html
+      - name: Upload Go test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: Go-results-${{ env.SHORT_SHA }}-${{ github.run_id }}
+          path: TestResults-${{ env.SHORT_SHA }}.json
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-${{ env.SHORT_SHA }}-${{ github.run_id }}
+          path: coverage-${{ env.SHORT_SHA }}.html
