@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   golang_test:
-    name: lint
+    name: test
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
@@ -23,6 +23,13 @@ jobs:
       - name: Install dependencies
         run: go mod download
       - name: Build
-        run: go build -v ./...
+        run: go build -v ./... 
+      - name: Set short SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
       - name: Test with the Go CLI
-        run: go test ./...
+        run: go test ./... -json > TestResults-${{ env.SHORT_SHA }}.json
+      - name: Upload Go test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: Go-results-${{ env.SHORT_SHA }}-${{ github.run_id }}
+          path: TestResults-${{ env.SHORT_SHA }}.json
