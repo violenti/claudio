@@ -1,0 +1,18 @@
+pre-commit:
+  parallel: true
+  commands:
+    gofmt-check:
+      glob: "*.go"
+      run: gofmt -l -d {staged_files} && test -z "$(gofmt -l {staged_files})"
+    gitleaks:
+      run: gitleaks git --pre-commit --staged --no-banner
+
+commit-msg:
+  commands:
+    conventional-commit:
+      run: .lefthook/commit-msg/validate-commit-msg.sh {1}
+
+pre-push:
+  commands:
+    tests:
+      run: go test ./...

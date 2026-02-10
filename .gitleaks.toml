@@ -1,0 +1,7 @@
+title = "claudio gitleaks config"
+
+[allowlist]
+  description = "Allowlisted patterns"
+  paths = [
+    '''(.*)_test\.go$''',
+  ]
