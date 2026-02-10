@@ -1,0 +1,28 @@
+name: golangci-test
+on:
+  push:
+    branches:
+      - 'feature/*'
+      - 'fix/*'
+  pull_request:
+
+permissions:
+  contents: read
+  # Optional: allow read access to pull requests. Use with `only-new-issues` option.
+  # pull-requests: read
+
+jobs:
+  golang_test:
+    name: lint
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+      - name: Install dependencies
+        run: go get .
+      - name: Build
+        run: go build -v ./...
+      - name: Test with the Go CLI
+        run: go test
