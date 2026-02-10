@@ -1,0 +1,57 @@
+name: release
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: build-${{ matrix.goos }}-${{ matrix.goarch }}
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        include:
+          - goos: linux
+            goarch: amd64
+            binary: claudio-linux-amd64
+          - goos: darwin
+            goarch: amd64
+            binary: claudio-darwin-amd64
+          - goos: darwin
+            goarch: arm64
+            binary: claudio-darwin-arm64
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+      - name: Install dependencies
+        run: go mod download
+      - name: Build
+        run: make build-${{ matrix.goos }}-${{ matrix.goarch }}
+      - name: Upload binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.binary }}
+          path: ${{ matrix.binary }}
+
+  release:
+    name: create-release
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: binaries
+          merge-multiple: true
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          generate_release_notes: true
+          files: binaries/*
