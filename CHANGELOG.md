@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.1.0](https://github.com/violenti/claudio/compare/v1.0.0...v1.1.0) (2026-02-15)
+
+
+### Features
+
+* add script for installation ([6edba24](https://github.com/violenti/claudio/commit/6edba24106f3b73a6f7e1557998dd23933e60350))
+* Claude's refactoring: streamiong is now used  instead of REST API ([4455139](https://github.com/violenti/claudio/commit/44551396b859be55ada9807f84b5158d6d60e6c4))
+* Claude's refactoring: streamiong is now used  instead of REST API ([76b04fe](https://github.com/violenti/claudio/commit/76b04fe20c229a1a9cb7a2bcdbd2cee4c0faeb4f))
+* feature streaming ([ac44da9](https://github.com/violenti/claudio/commit/ac44da96f0774b353e22769b178e64953c3d9bad))
+* OpenAI refactoring: streamiong is now used  instead of REST API ([a9255cd](https://github.com/violenti/claudio/commit/a9255cdf2a314acc69d59fb1559c02a93f6b1fd2))
+* OpenAI refactoring: streamiong is now used  instead of REST API ([f38d649](https://github.com/violenti/claudio/commit/f38d649e23c687bcd50584506c830ab534d5fcd9))
+* streaming support ([811fc54](https://github.com/violenti/claudio/commit/811fc5410e9749cac9179b3f76fa72e1acffd981))
+
+
+### Bug Fixes
+
+* git conflict ([0ce50d8](https://github.com/violenti/claudio/commit/0ce50d877661fa4ec1dfec3ccac5042d9053ba17))
+* golang version 1.25.6 ([d90f20d](https://github.com/violenti/claudio/commit/d90f20d5fedf0941e72ebff51b1c9630aff6dc23))
+
 ## 1.0.0 (2026-02-10)
 
 
