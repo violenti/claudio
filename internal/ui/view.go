@@ -58,7 +58,7 @@ func (m Model) View() string {
   ########################`
 
 	b.WriteString(banner + "\n\n")
-	b.WriteString(titleStyle.Render("Chooise the ai:") + "\n\n")
+	b.WriteString(titleStyle.Render("Choose the ai:") + "\n\n")
 
 	for i, p := range m.providers {
 		if m.cursor == i {

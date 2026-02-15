@@ -4,29 +4,30 @@
 [![Go Version](https://img.shields.io/badge/go-1.21+-00ADD8.svg)](https://golang.org/dl/)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://choosealicense.com/licenses/gpl-3.0/)
 
-**Claudio** is a lightweight AI assistant powered by Anthropic (just drop in your API key). Support for OpenAI and other LLMs is on the roadmap.
-
-
+**Claudio** is a lightweight AI assistant powered by Anthropic and  OpenAI (just drop in your API key). Support for other LLMs is on the roadmap.
 
 ## :rocket: Features
 
 - [x] Anthropic (Claude) integration.
-- [x] OpenAI support (Coming soon).
-- [ ] Local LLM support via Ollama (Planned).
+- [x] OpenAI support.
+- [x] Streaming support.
+- [ ] Local LLM support via Ollama (coming soon).
 
 
 ## :hammer_and_wrench: Prerequisites
 
-You need **Go 1.21** or higher installed on your machine.
+You need **Go 1.25** or higher installed on your machine.
 
 **macOS:**
 ```bash
 brew install go
+```
 
 Linux/Windows: Check the official installation guide.
 
 
-:inbox_tray: Installation
+## :inbox_tray: Installation
+
 Clone the repository and build the binary:
 
 ```bash
@@ -38,7 +39,12 @@ cd claudio
 make
 
 ```
+Or you could execute: 
 
+``` bash 
+curl -fsSL https://raw.githubusercontent.com/violenti/claudio/main/install.sh | bash
+
+```
 
 This will generate the claudio binary in the root directory.
 
@@ -53,6 +59,14 @@ Export your Anthropic API Key:
  export ANTHROPIC_API_KEY= ""
 
  ```
+
+
+ ```bash
+
+ export OPENAI_API_KEY= ""
+
+ ```
+
  :computer: Usage 
 
  ```bash
