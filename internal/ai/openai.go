@@ -50,24 +50,4 @@ func (o OpenAI) Question(p string) (string, error) {
 
 	return "", nil
 
-	/*
-		params := openai.ChatCompletionNewParams{
-			Messages: []openai.ChatCompletionMessageParamUnion{
-				openai.UserMessage(p),
-			},
-			Seed:  openai.Int(0),
-			Model: openai.ChatModelGPT5_2,
-		}
-
-		completion, err := client.Chat.Completions.New(ctx, params)
-
-		if err != nil {
-			return "", fmt.Errorf("error of API (OpenIA): %w", err)
-		}
-		if len(completion.Choices) > 0 {
-			return completion.Choices[0].Message.Content, nil
-		}
-
-		return "I received no response from the AI", nil
-	*/
 }
