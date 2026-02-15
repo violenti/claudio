@@ -27,19 +27,40 @@ func (c Claude) Question(prompt string) (string, error) {
 	}
 	client := anthropic.NewClient(option.WithAPIKey(ApiKey))
 
-	message, err := client.Messages.New(context.TODO(), anthropic.MessageNewParams{
+	stream := client.Messages.NewStreaming(context.TODO(), anthropic.MessageNewParams{
+		Model:     anthropic.ModelClaudeSonnet4_5_20250929,
 		MaxTokens: 1024,
 		Messages: []anthropic.MessageParam{
 			anthropic.NewUserMessage(anthropic.NewTextBlock(prompt)),
 		},
-		Model: anthropic.ModelClaudeSonnet4_5_20250929,
 	})
-	if err != nil {
-		return "", fmt.Errorf("error of API (Anthropic): %w", err)
+
+	message := anthropic.Message{}
+	for stream.Next() {
+		event := stream.Current()
+		err := message.Accumulate(event)
+		if err != nil {
+			panic(err)
+		}
+
+		switch eventVariant := event.AsAny().(type) {
+		case anthropic.ContentBlockDeltaEvent:
+			switch deltaVariant := eventVariant.Delta.AsAny().(type) {
+			case anthropic.TextDelta:
+				print(deltaVariant.Text)
+			}
+
+		}
+
 	}
+	if stream.Err() != nil {
+		return "", stream.Err()
+	}
+
 	if len(message.Content) > 0 {
 		return message.Content[0].Text, nil
 	}
 
-	return "I received no response from the AI", nil
+	return "", nil
+
 }
