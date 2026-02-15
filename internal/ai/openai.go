@@ -29,22 +29,45 @@ func (o OpenAI) Question(p string) (string, error) {
 	client := openai.NewClient()
 	ctx := context.Background()
 
-	params := openai.ChatCompletionNewParams{
+	stream := client.Chat.Completions.NewStreaming(ctx, openai.ChatCompletionNewParams{
 		Messages: []openai.ChatCompletionMessageParamUnion{
 			openai.UserMessage(p),
 		},
 		Seed:  openai.Int(0),
 		Model: openai.ChatModelGPT5_2,
+	})
+	for stream.Next() {
+		evt := stream.Current()
+		if len(evt.Choices) > 0 {
+			print(evt.Choices[0].Delta.Content)
+		}
+	}
+	println()
+
+	if err := stream.Err(); err != nil {
+		return "", stream.Err()
 	}
 
-	completion, err := client.Chat.Completions.New(ctx, params)
+	return "", nil
 
-	if err != nil {
-		return "", fmt.Errorf("error of API (OpenIA): %w", err)
-	}
-	if len(completion.Choices) > 0 {
-		return completion.Choices[0].Message.Content, nil
-	}
+	/*
+		params := openai.ChatCompletionNewParams{
+			Messages: []openai.ChatCompletionMessageParamUnion{
+				openai.UserMessage(p),
+			},
+			Seed:  openai.Int(0),
+			Model: openai.ChatModelGPT5_2,
+		}
 
-	return "I received no response from the AI", nil
+		completion, err := client.Chat.Completions.New(ctx, params)
+
+		if err != nil {
+			return "", fmt.Errorf("error of API (OpenIA): %w", err)
+		}
+		if len(completion.Choices) > 0 {
+			return completion.Choices[0].Message.Content, nil
+		}
+
+		return "I received no response from the AI", nil
+	*/
 }
