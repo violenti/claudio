@@ -38,6 +38,9 @@ jobs:
           - goos: darwin
             goarch: arm64
             binary: claudio-darwin-arm64
+          - goos: windows
+            goarch: amd64
+            binary: claudio-windows-amd64.exe
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-go@v6
