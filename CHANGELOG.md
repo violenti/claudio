@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/violenti/claudio/compare/v1.1.0...v1.2.0) (2026-03-09)
+
+
+### Features
+
+* ollama ([#9](https://github.com/violenti/claudio/issues/9)) ([67eb90d](https://github.com/violenti/claudio/commit/67eb90d418aabe0d7a2b91f026cbff428d72bfb6))
+
 ## [1.1.0](https://github.com/violenti/claudio/compare/v1.0.0...v1.1.0) (2026-02-15)
 
 
