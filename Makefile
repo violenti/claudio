@@ -4,7 +4,7 @@ GOFMT=gofmt
 BIN_NAME := claudio
 TARGET := $(BIN_NAME)
 
-.PHONY: all build run clean test help build-linux-amd64 build-darwin-amd64 build-darwin-arm64 build-all setup
+.PHONY: all build run clean test help build-linux-amd64 build-darwin-amd64 build-darwin-arm64 build-windows-amd64 build-all setup
 
 # Default target: builds the application
 all: build
@@ -27,8 +27,12 @@ build-darwin-amd64:
 build-darwin-arm64:
 	GOOS=darwin GOARCH=arm64 $(GO) build -o $(BIN_NAME)-darwin-arm64 ./cmd/aicli
 
+## build-windows-amd64: build for Windows x64
+build-windows-amd64:
+	GOOS=windows GOARCH=amd64 $(GO) build -o $(BIN_NAME)-windows-amd64.exe ./cmd/aicli
+
 ## build-all: build for all platforms
-build-all: build-linux-amd64 build-darwin-amd64 build-darwin-arm64
+build-all: build-linux-amd64 build-darwin-amd64 build-darwin-arm64 build-windows-amd64
 
 ## run: build and run the application
 run: build
