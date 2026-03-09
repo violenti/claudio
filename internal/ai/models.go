@@ -22,7 +22,7 @@ func ReadModels() (Config, error) {
 	if err != nil {
 		return config, err
 	}
-	defer configFile.Close()
+	defer func() { _ = configFile.Close() }()
 
 	err = json.NewDecoder(configFile).Decode(&config)
 	return config, err

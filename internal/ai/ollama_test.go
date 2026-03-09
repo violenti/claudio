@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"strings"
 	"testing"
 )
@@ -101,7 +100,7 @@ func TestOllamaQuestionWithError(t *testing.T) {
 	// Mock Ollama server that returns an error
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("Internal server error"))
+		_, _ = w.Write([]byte("Internal server error"))
 	}))
 	defer server.Close()
 
@@ -127,7 +126,7 @@ func TestOllamaQuestionWithOllamaError(t *testing.T) {
 		response := OllamaResponse{
 			Error: "model not found",
 		}
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(response)
 	}))
 	defer server.Close()
 
@@ -147,38 +146,32 @@ func TestOllamaQuestionWithOllamaError(t *testing.T) {
 }
 
 func TestOllamaEnvironmentVariables(t *testing.T) {
-	// Test default BaseURL
-	originalBaseURL := os.Getenv("OLLAMA_BASE_URL")
-	originalModel := os.Getenv("OLLAMA_MODEL")
+	// Clear env vars — t.Setenv restores originals automatically on cleanup
+	t.Setenv("OLLAMA_BASE_URL", "")
+	t.Setenv("OLLAMA_MODEL", "")
 
-	// Clean up environment variables
-	os.Unsetenv("OLLAMA_BASE_URL")
-	os.Unsetenv("OLLAMA_MODEL")
-
-	// Mock server for testing default values
+	// Phase 1: no env vars, BaseURL provided via struct
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/api/tags" {
-			// Return available models
 			w.Header().Set("Content-Type", "application/json")
 			listResponse := OllamaListResponse{
-				Models: []OllamaModel{
-					{Name: "deepseek-r1:8b"},
-				},
+				Models: []OllamaModel{{Name: "deepseek-r1:8b"}},
 			}
-			json.NewEncoder(w).Encode(listResponse)
+			_ = json.NewEncoder(w).Encode(listResponse)
 			return
 		}
 
 		var req OllamaRequest
-		json.NewDecoder(r.Body).Decode(&req)
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			t.Errorf("Error decoding request: %v", err)
+		}
 
 		if req.Model == "" {
 			t.Errorf("Expected a default model to be set, got empty string")
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		response := OllamaResponse{Model: req.Model, Response: "test", Done: true}
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(OllamaResponse{Model: req.Model, Response: "test", Done: true})
 	}))
 	defer server.Close()
 
@@ -188,54 +181,37 @@ func TestOllamaEnvironmentVariables(t *testing.T) {
 		t.Errorf("Unexpected error: %v", err)
 	}
 
-	// Test environment variable usage
-	os.Setenv("OLLAMA_BASE_URL", server.URL)
-	os.Setenv("OLLAMA_MODEL", "mistral")
-
+	// Phase 2: use env vars
 	server2 := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/api/tags" {
-			// Return available models
 			w.Header().Set("Content-Type", "application/json")
-			listResponse := OllamaListResponse{
-				Models: []OllamaModel{
-					{Name: "mistral"},
-				},
-			}
-			json.NewEncoder(w).Encode(listResponse)
+			_ = json.NewEncoder(w).Encode(OllamaListResponse{
+				Models: []OllamaModel{{Name: "mistral"}},
+			})
 			return
 		}
 
 		var req OllamaRequest
-		json.NewDecoder(r.Body).Decode(&req)
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			t.Errorf("Error decoding request: %v", err)
+		}
 
 		if req.Model != "mistral" {
 			t.Errorf("Expected model from env 'mistral', got %s", req.Model)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		response := OllamaResponse{Model: req.Model, Response: "test", Done: true}
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(OllamaResponse{Model: req.Model, Response: "test", Done: true})
 	}))
 	defer server2.Close()
 
-	os.Setenv("OLLAMA_BASE_URL", server2.URL)
+	t.Setenv("OLLAMA_BASE_URL", server2.URL)
+	t.Setenv("OLLAMA_MODEL", "mistral")
 
 	ollamaEnv := Ollama{}
 	_, err = ollamaEnv.Question("test")
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
-	}
-
-	// Restore original environment variables
-	if originalBaseURL != "" {
-		os.Setenv("OLLAMA_BASE_URL", originalBaseURL)
-	} else {
-		os.Unsetenv("OLLAMA_BASE_URL")
-	}
-	if originalModel != "" {
-		os.Setenv("OLLAMA_MODEL", originalModel)
-	} else {
-		os.Unsetenv("OLLAMA_MODEL")
 	}
 }
 

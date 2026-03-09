@@ -76,8 +76,12 @@ func TestReadModels_InvalidJSON(t *testing.T) {
 	t.Setenv("HOME", tmp)
 
 	configDir := filepath.Join(tmp, ".claudio")
-	os.MkdirAll(configDir, 0755)
-	os.WriteFile(filepath.Join(configDir, "config.json"), []byte("{invalid json}"), 0644)
+	if err := os.MkdirAll(configDir, 0755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(configDir, "config.json"), []byte("{invalid json}"), 0644); err != nil {
+		t.Fatal(err)
+	}
 
 	_, err := ReadModels()
 	if err == nil {

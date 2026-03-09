@@ -68,7 +68,7 @@ func (o Ollama) getAvailableModel(baseURL string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("error getting available models: %v", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		return "", fmt.Errorf("error getting models (status %d)", resp.StatusCode)
@@ -126,7 +126,7 @@ func (o Ollama) Question(prompt string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("error making request to Ollama: %v", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
