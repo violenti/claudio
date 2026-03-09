@@ -11,8 +11,7 @@
 - [x] Anthropic (Claude) integration.
 - [x] OpenAI support.
 - [x] Streaming support.
-- [ ] Local LLM support via Ollama (coming soon).
-
+- [x] Local LLM support via Ollama.
 
 ## :hammer_and_wrench: Prerequisites
 
