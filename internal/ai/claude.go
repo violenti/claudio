@@ -11,6 +11,7 @@ import (
 
 type Claude struct {
 	ApiKey string
+	Model  string
 }
 
 func (c Claude) Name() string {
@@ -27,8 +28,13 @@ func (c Claude) Question(prompt string) (string, error) {
 	}
 	client := anthropic.NewClient(option.WithAPIKey(ApiKey))
 
+	model := anthropic.Model(anthropic.ModelClaudeSonnet4_5_20250929)
+	if c.Model != "" {
+		model = anthropic.Model(c.Model)
+	}
+
 	stream := client.Messages.NewStreaming(context.TODO(), anthropic.MessageNewParams{
-		Model:     anthropic.ModelClaudeSonnet4_5_20250929,
+		Model:     model,
 		MaxTokens: 1024,
 		Messages: []anthropic.MessageParam{
 			anthropic.NewUserMessage(anthropic.NewTextBlock(prompt)),

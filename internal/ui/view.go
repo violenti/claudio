@@ -58,18 +58,32 @@ func (m Model) View() string {
   ########################`
 
 	b.WriteString(banner + "\n\n")
-	b.WriteString(titleStyle.Render("Choose the ai:") + "\n\n")
 
-	for i, p := range m.providers {
-		if m.cursor == i {
-			b.WriteString(selStyle.Render(fmt.Sprintf("> %s", p.Name())))
-		} else {
-			b.WriteString(itemStyle.Render(p.Name()))
+	switch m.state {
+	case stateProviders:
+		b.WriteString(titleStyle.Render("Choose the ai:") + "\n\n")
+		for i, p := range m.providers {
+			if m.cursor == i {
+				b.WriteString(selStyle.Render(fmt.Sprintf("> %s", p.Name())))
+			} else {
+				b.WriteString(itemStyle.Render(p.Name()))
+			}
+			b.WriteString("\n")
 		}
-		b.WriteString("\n")
-	}
+		b.WriteString("\n (Use the arrow keys to move, press enter to select)\n")
 
-	b.WriteString("\n (Use the arrow keys to move, press enter to select)\n")
+	case stateModels:
+		b.WriteString(titleStyle.Render(fmt.Sprintf("Choose the model for %s:", m.pendingProvider.Name())) + "\n\n")
+		for i, name := range m.modelNames {
+			if m.cursor == i {
+				b.WriteString(selStyle.Render(fmt.Sprintf("> %s", name)))
+			} else {
+				b.WriteString(itemStyle.Render(name))
+			}
+			b.WriteString("\n")
+		}
+		b.WriteString("\n (Use the arrow keys to move, press enter to select, esc to go back)\n")
+	}
 
 	return b.String()
 }

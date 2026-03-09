@@ -29,12 +29,17 @@ func (o OpenAI) Question(p string) (string, error) {
 	client := openai.NewClient()
 	ctx := context.Background()
 
+	model := openai.ChatModelGPT5_2
+	if o.Model != "" {
+		model = openai.ChatModel(o.Model)
+	}
+
 	stream := client.Chat.Completions.NewStreaming(ctx, openai.ChatCompletionNewParams{
 		Messages: []openai.ChatCompletionMessageParamUnion{
 			openai.UserMessage(p),
 		},
 		Seed:  openai.Int(0),
-		Model: openai.ChatModelGPT5_2,
+		Model: model,
 	})
 	for stream.Next() {
 		evt := stream.Current()

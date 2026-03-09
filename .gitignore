@@ -8,7 +8,7 @@
 *.so
 *.dylib
 claudio
-
+.claude/
 # Test binary, built with `go test -c`
 *.test
 

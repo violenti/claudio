@@ -35,7 +35,24 @@ func main() {
 	motors := []ai.Provider{
 		ai.OpenAI{},
 		ai.Claude{},
-		ai.MockIA{},
+		ai.Ollama{},
+	}
+
+	modelOptions := map[string]map[string]string{}
+	config, err := ai.ReadModels()
+	if err == nil {
+		providerKeys := map[string]string{
+			ai.Claude{}.Name(): "anthropic",
+			ai.OpenAI{}.Name(): "openai",
+			ai.Ollama{}.Name(): "ollama",
+		}
+		for _, p := range motors {
+			if key, ok := providerKeys[p.Name()]; ok {
+				if models, exists := config.Models[key]; exists {
+					modelOptions[p.Name()] = models
+				}
+			}
+		}
 	}
 
 	fd := int(os.Stdin.Fd())
@@ -45,7 +62,7 @@ func main() {
 	}
 
 	// --- Bubble Tea (menú) ---
-	p := tea.NewProgram(ui.InitialModel(motors))
+	p := tea.NewProgram(ui.InitialModel(motors, modelOptions))
 	finalModel, err := p.Run()
 
 	_ = term.Restore(fd, oldState)
@@ -84,7 +101,7 @@ func main() {
 	}
 	_ = term.Restore(fd, oldState)
 
-	cmd := exec.Command(os.Args[0], "chat", strconv.Itoa(selectedIndex))
+	cmd := exec.Command(os.Args[0], "chat", strconv.Itoa(selectedIndex), mResult.SelectedModel)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -109,21 +126,28 @@ func chatMode() {
 	motors := []ai.Provider{
 		ai.OpenAI{},
 		ai.Claude{},
-		ai.MockIA{},
+		ai.Ollama{},
 	}
 
 	if selectedIndex < 0 || selectedIndex >= len(motors) {
 		fmt.Println("Error: invalid provider index")
 		return
 	}
+
+	selectedModel := ""
+	if len(os.Args) > 3 {
+		selectedModel = os.Args[3]
+	}
+
 	switch selectedIndex {
 	case 0: // OpenAI
 		key := getAPIKey("OPENAI_API_KEY", "OpenAI")
-		motors[0] = ai.OpenAI{Token: key}
+		motors[0] = ai.OpenAI{Token: key, Model: selectedModel}
 	case 1: // Claude
 		key := getAPIKey("ANTHROPIC_API_KEY", "Claude")
-		motors[1] = ai.Claude{ApiKey: key}
-
+		motors[1] = ai.Claude{ApiKey: key, Model: selectedModel}
+	case 2: // Ollama
+		motors[2] = ai.Ollama{}
 	}
 
 	selectedProvider := motors[selectedIndex]
