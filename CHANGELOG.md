@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/violenti/claudio/compare/v1.2.0...v1.3.0) (2026-03-27)
+
+
+### Features
+
+* i add support for windows ([#12](https://github.com/violenti/claudio/issues/12)) ([a29ed12](https://github.com/violenti/claudio/commit/a29ed12368f91d60553f134da439f8c858c1a938))
+
 ## [1.2.0](https://github.com/violenti/claudio/compare/v1.1.0...v1.2.0) (2026-03-09)
 
 
