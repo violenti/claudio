@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/violenti/claudio/compare/v1.3.0...v1.3.1) (2026-05-04)
+
+
+### Bug Fixes
+
+* enhance chat interface with interactive features ([#14](https://github.com/violenti/claudio/issues/14)) ([9f18856](https://github.com/violenti/claudio/commit/9f188569908ca60b555e4214b5bed14a2647e9ee))
+
 ## [1.3.0](https://github.com/violenti/claudio/compare/v1.2.0...v1.3.0) (2026-03-27)
 
 
