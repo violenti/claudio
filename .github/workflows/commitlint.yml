@@ -21,4 +21,14 @@ jobs:
       - name: Install commitlint
         run: npm install -g @commitlint/cli @commitlint/config-conventional
       - name: Validate commits
-        run: npx commitlint --from ${{ github.event.pull_request.base.sha || github.event.before }} --to ${{ github.sha }}
+        run: |
+          FROM_SHA="${{ github.event.pull_request.base.sha || github.event.before }}"
+          TO_SHA="${{ github.sha }}"
+
+          # Si el FROM_SHA es todo ceros (primer push), validar desde el commit inicial
+          if [ "$FROM_SHA" == "0000000000000000000000000000000000000000" ]; then
+            # Obtener el primer commit de la rama
+            FROM_SHA=$(git rev-list --max-parents=0 HEAD)
+          fi
+
+          npx commitlint --from "$FROM_SHA" --to "$TO_SHA"

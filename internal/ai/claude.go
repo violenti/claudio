@@ -49,14 +49,7 @@ func (c Claude) Question(prompt string) (string, error) {
 			panic(err)
 		}
 
-		switch eventVariant := event.AsAny().(type) {
-		case anthropic.ContentBlockDeltaEvent:
-			switch deltaVariant := eventVariant.Delta.AsAny().(type) {
-			case anthropic.TextDelta:
-				print(deltaVariant.Text)
-			}
-
-		}
+		// Accumulate text without printing during streaming
 
 	}
 	if stream.Err() != nil {

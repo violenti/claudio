@@ -149,7 +149,6 @@ func (o Ollama) Question(prompt string) (string, error) {
 			return "", fmt.Errorf("Ollama error: %s", response.Error)
 		}
 
-		print(response.Response)
 		fullResponse.WriteString(response.Response)
 
 		if response.Done {
@@ -157,6 +156,5 @@ func (o Ollama) Question(prompt string) (string, error) {
 		}
 	}
 
-	println()
 	return fullResponse.String(), nil
 }
