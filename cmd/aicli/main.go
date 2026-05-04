@@ -218,7 +218,11 @@ func chatMode() {
 		fmt.Printf("Error initializing readline: %v\n", err)
 		return
 	}
-	defer rl.Close()
+	defer func() {
+		if err := rl.Close(); err != nil {
+			fmt.Printf("Error closing readline: %v\n", err)
+		}
+	}()
 
 	returnToMenu := false
 	ctrlCCount := 0
