@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/openai/openai-go/v3"
 )
@@ -41,18 +42,19 @@ func (o OpenAI) Question(p string) (string, error) {
 		Seed:  openai.Int(0),
 		Model: model,
 	})
+
+	var response strings.Builder
 	for stream.Next() {
 		evt := stream.Current()
 		if len(evt.Choices) > 0 {
-			print(evt.Choices[0].Delta.Content)
+			response.WriteString(evt.Choices[0].Delta.Content)
 		}
 	}
-	println()
 
 	if err := stream.Err(); err != nil {
 		return "", stream.Err()
 	}
 
-	return "", nil
+	return response.String(), nil
 
 }
