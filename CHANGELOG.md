@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/violenti/claudio/compare/v1.3.1...v1.4.0) (2026-05-07)
+
+
+### Features
+
+* add CNAME file for GitHub Pages custom domain setup ([3a02eec](https://github.com/violenti/claudio/commit/3a02eeccb1fe8d76ad4cc5017071205811b305c4))
+
 ## [1.3.1](https://github.com/violenti/claudio/compare/v1.3.0...v1.3.1) (2026-05-04)
 
 
