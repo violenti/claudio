@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/violenti/claudio/compare/v1.4.0...v1.5.0) (2026-07-26)
+
+
+### Features
+
+* foghorn quotes and configuration file ([#17](https://github.com/violenti/claudio/issues/17)) ([7cf8676](https://github.com/violenti/claudio/commit/7cf8676a5e218e06a0f473f68420243164469789))
+
 ## [1.4.0](https://github.com/violenti/claudio/compare/v1.3.1...v1.4.0) (2026-05-07)
 
 
