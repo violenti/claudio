@@ -10,8 +10,9 @@ import (
 )
 
 type Claude struct {
-	ApiKey string
-	Model  string
+	ApiKey       string
+	Model        string
+	SystemPrompt string
 }
 
 func (c Claude) Name() string {
@@ -33,13 +34,19 @@ func (c Claude) Question(prompt string) (string, error) {
 		model = anthropic.Model(c.Model)
 	}
 
-	stream := client.Messages.NewStreaming(context.TODO(), anthropic.MessageNewParams{
+	params := anthropic.MessageNewParams{
 		Model:     model,
 		MaxTokens: 1024,
 		Messages: []anthropic.MessageParam{
 			anthropic.NewUserMessage(anthropic.NewTextBlock(prompt)),
 		},
-	})
+	}
+	if c.SystemPrompt != "" {
+		params.System = []anthropic.TextBlockParam{
+			{Text: c.SystemPrompt},
+		}
+	}
+	stream := client.Messages.NewStreaming(context.TODO(), params)
 
 	message := anthropic.Message{}
 	for stream.Next() {

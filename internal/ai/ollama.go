@@ -11,13 +11,15 @@ import (
 )
 
 type Ollama struct {
-	BaseURL string
-	Model   string
+	BaseURL      string
+	Model        string
+	SystemPrompt string
 }
 
 type OllamaRequest struct {
 	Model  string `json:"model"`
 	Prompt string `json:"prompt"`
+	System string `json:"system,omitempty"`
 	Stream bool   `json:"stream"`
 }
 
@@ -114,6 +116,7 @@ func (o Ollama) Question(prompt string) (string, error) {
 	requestBody := OllamaRequest{
 		Model:  model,
 		Prompt: prompt,
+		System: o.SystemPrompt,
 		Stream: true,
 	}
 

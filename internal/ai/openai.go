@@ -10,8 +10,9 @@ import (
 )
 
 type OpenAI struct {
-	Token string
-	Model string
+	Token        string
+	Model        string
+	SystemPrompt string
 }
 
 func (o OpenAI) Name() string {
@@ -35,12 +36,16 @@ func (o OpenAI) Question(p string) (string, error) {
 		model = openai.ChatModel(o.Model)
 	}
 
+	messages := []openai.ChatCompletionMessageParamUnion{}
+	if o.SystemPrompt != "" {
+		messages = append(messages, openai.SystemMessage(o.SystemPrompt))
+	}
+	messages = append(messages, openai.UserMessage(p))
+
 	stream := client.Chat.Completions.NewStreaming(ctx, openai.ChatCompletionNewParams{
-		Messages: []openai.ChatCompletionMessageParamUnion{
-			openai.UserMessage(p),
-		},
-		Seed:  openai.Int(0),
-		Model: model,
+		Messages: messages,
+		Seed:     openai.Int(0),
+		Model:    model,
 	})
 
 	var response strings.Builder

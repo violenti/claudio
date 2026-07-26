@@ -1,21 +1,22 @@
 {
-  "models" : {
-  "anthropic": {
-    "Claude Opus": "claude-3-opus-20240229",
-    "Claude Sonnet 4.5": "claude-sonnet-4-5-20250929",
-    "Claude Haiku": "claude-3-5-haiku-20241022"
-  },
-  "openai": {
-    "GPT-5 Pro": "gpt-5-2026-pro",
-    "GPT-5 Standard": "gpt-5-2026-01",
-    "GPT-5 Mini": "gpt-5-mini"
-  },
-  "ollama": {
-    "DeepSeek R1 8B": "deepseek-r1:8b",
-    "Llama 2": "llama2",
-    "Llama 3.1": "llama3.1",
-    "Mistral": "mistral",
-    "CodeLlama": "codellama"
+  "system_prompt": "Responde en español, te llamas claudio y sos un gallo que trabaja como asistente de ia",
+  "models": {
+    "anthropic": {
+      "Claude Opus": "claude-3-opus-20240229",
+      "Claude Sonnet 4.5": "claude-sonnet-4-5-20250929",
+      "Claude Haiku": "claude-3-5-haiku-20241022"
+    },
+    "openai": {
+      "GPT-5 Pro": "gpt-5-2026-pro",
+      "GPT-5 Standard": "gpt-5-2026-01",
+      "GPT-5 Mini": "gpt-5-mini"
+    },
+    "ollama": {
+      "DeepSeek R1 8B": "deepseek-r1:8b",
+      "Llama 2": "llama2",
+      "Llama 3.1": "llama3.1",
+      "Mistral": "mistral",
+      "CodeLlama": "codellama"
+    }
   }
-}
 }
