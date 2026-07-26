@@ -7,7 +7,8 @@ import (
 )
 
 type Config struct {
-	Models map[string]map[string]string `json:"models"`
+	Models       map[string]map[string]string `json:"models"`
+	SystemPrompt string                       `json:"system_prompt"`
 }
 
 func ReadModels() (Config, error) {

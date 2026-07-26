@@ -1,9 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"math/rand"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -15,6 +18,24 @@ import (
 	"github.com/violenti/claudio/internal/ui"
 	"golang.org/x/term"
 )
+
+func randomFoghornQuote() string {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return ""
+	}
+	data, err := os.ReadFile(filepath.Join(homeDir, ".claudio", "foghorn_quotes.json"))
+	if err != nil {
+		return ""
+	}
+	var parsed struct {
+		Quotes []string `json:"quotes"`
+	}
+	if err := json.Unmarshal(data, &parsed); err != nil || len(parsed.Quotes) == 0 {
+		return ""
+	}
+	return parsed.Quotes[rand.Intn(len(parsed.Quotes))]
+}
 
 func getAPIKey(envVar string, providerNmae string) string {
 	key := os.Getenv(envVar)
@@ -173,15 +194,20 @@ func chatMode() {
 		selectedModel = os.Args[3]
 	}
 
+	systemPrompt := ""
+	if cfg, err := ai.ReadModels(); err == nil && cfg.SystemPrompt != "" {
+		systemPrompt = cfg.SystemPrompt
+	}
+
 	switch selectedIndex {
 	case 0: // OpenAI
 		key := getAPIKey("OPENAI_API_KEY", "OpenAI")
-		motors[0] = ai.OpenAI{Token: key, Model: selectedModel}
+		motors[0] = ai.OpenAI{Token: key, Model: selectedModel, SystemPrompt: systemPrompt}
 	case 1: // Claude
 		key := getAPIKey("ANTHROPIC_API_KEY", "Claude")
-		motors[1] = ai.Claude{ApiKey: key, Model: selectedModel}
+		motors[1] = ai.Claude{ApiKey: key, Model: selectedModel, SystemPrompt: systemPrompt}
 	case 2: // Ollama
-		motors[2] = ai.Ollama{}
+		motors[2] = ai.Ollama{SystemPrompt: systemPrompt}
 	}
 
 	selectedProvider := motors[selectedIndex]
@@ -273,6 +299,10 @@ func chatMode() {
 
 		// Show thinking animation
 		fmt.Println()
+		quote := randomFoghornQuote()
+		if quote != "" {
+			fmt.Printf("  %s\n", color.YellowString("🐓 \"%s\"", quote))
+		}
 		stopSpinner := make(chan bool, 1)
 		go func() {
 			spinners := []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"}
